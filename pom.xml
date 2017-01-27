@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.brainfryd.bitbucket</groupId>
+	<artifactId>git-notes-plugin</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<organization>
+		<name>BrainFryd</name>
+		<url>http://www.brainfryd.com/</url>
+	</organization>
+	<name>git-notes-plugin</name>
+	<description>git-notes plugin for Atlassian Bitbucket Server.</description>
+	<packaging>atlassian-plugin</packaging>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.atlassian.bitbucket.server</groupId>
+				<artifactId>bitbucket-parent</artifactId>
+				<version>${bitbucket.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>com.atlassian.bitbucket.server</groupId>
+			<artifactId>bitbucket-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.atlassian.plugins</groupId>
+			<artifactId>atlassian-plugins-webfragment</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.atlassian.maven.plugins</groupId>
+				<artifactId>bitbucket-maven-plugin</artifactId>
+				<version>${amps.version}</version>
+				<extensions>true</extensions>
+				<configuration>
+					<enableQuickReload>true</enableQuickReload>
+					<enableFastdev>false</enableFastdev>
+					<products>
+						<product>
+							<id>bitbucket</id>
+							<instanceId>bitbucket</instanceId>
+							<version>${bitbucket.version}</version>
+							<dataVersion>${bitbucket.data.version}</dataVersion>
+						</product>
+					</products>
+					<instructions>
+						<Atlassian-Plugin-Key>${atlassian.plugin.key}</Atlassian-Plugin-Key>
+						<Import-Package>org.springframework.osgi.*;resolution:="optional",
+							org.eclipse.gemini.blueprint.*;resolution:="optional", *</Import-Package>
+						<!-- Ensure plugin is Spring powered -->
+						<Spring-Context>*</Spring-Context>
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>com.atlassian.maven.plugins</groupId>
+										<artifactId>bitbucket-maven-plugin</artifactId>
+										<versionRange>[6.2.11,)</versionRange>
+										<goals>
+											<goal>compress-resources</goal>
+											<goal>filter-plugin-descriptor</goal>
+											<goal>filter-test-plugin-descriptor</goal>
+											<goal>generate-rest-docs</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>com.atlassian.plugin</groupId>
+										<artifactId>atlassian-spring-scanner-maven-plugin</artifactId>
+										<versionRange>[1.2.13,)</versionRange>
+										<goals>
+											<goal>atlassian-spring-scanner</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<bitbucket.version>4.9.1</bitbucket.version>
+		<bitbucket.data.version>4.9.1</bitbucket.data.version>
+		<amps.version>6.2.11</amps.version>
+		<!-- This key is used to keep the consistency between the key in atlassian-plugin.xml 
+			and the key to generate bundle. -->
+		<atlassian.plugin.key>${project.groupId}.${project.artifactId}</atlassian.plugin.key>
+	</properties>
+</project>
